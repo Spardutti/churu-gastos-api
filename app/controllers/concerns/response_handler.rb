@@ -1,16 +1,15 @@
 module ResponseHandler
-  def render_success(data, status = :ok)
-    render json: data, status: status
-  end
+  extend ActiveSupport::Concern
 
-  def render_error(errors, status = :unprocessable_entity)
-    formatted_errors = format_errors(errors)
-    render json: { errors: formatted_errors }, status: status
-  end
+  included do
+    private
 
-  private
+    def render_success(data, status = :ok)
+      render json: { status: 'ok', data: data }, status: status
+    end
 
-  def format_errors(errors)
-    errors.full_messages.map { |message| message }
+    def render_error(errors, status = :unprocessable_entity)
+      render json: { status: 'error', errors: errors }, status: status
+    end
   end
 end

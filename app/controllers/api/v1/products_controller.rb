@@ -48,7 +48,7 @@ module Api
       end
 
       def product_params
-        params.require(:product).permit(:name, :category_id)
+        params.require(:product).permit(:name, :category_id, :amount, :date, :description)
       end
 
       def serialize(resource)
