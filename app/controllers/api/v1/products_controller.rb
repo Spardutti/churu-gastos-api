@@ -1,9 +1,10 @@
 module Api
   module V1
-    class ProductsController < ActionController::API
+    class ProductsController < ApplicationController
       include ResponseHandler
 
       before_action :set_product, only: [:show, :update, :destroy]
+      before_action :authenticate_request
 
       # GET /api/v1/products
       def index

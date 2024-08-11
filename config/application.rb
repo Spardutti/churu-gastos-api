@@ -19,5 +19,8 @@ module App
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
     config.hosts << "churu-gastos-api.onrender.com"
+
+    config.session_store :cookie_store, key: '_your_app_session', expire_after: 1.hour
+
   end
 end

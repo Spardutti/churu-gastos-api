@@ -1,9 +1,10 @@
 module Api
   module V1
-    class CategoriesController < ActionController::API
+    class CategoriesController < ApplicationController
       include ResponseHandler
 
       before_action :set_category, only: [:show, :update, :destroy]
+      before_action :authenticate_request
 
       # GET /api/v1/categories
       def index
