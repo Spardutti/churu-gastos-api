@@ -7,7 +7,7 @@ class Api::V1::AuthController < ApplicationController
       token = TokenService.encode(user_id: user.id)
       render json: { status: 'success', user: { token: token, email: user.email } }, status: :ok
     else
-      render json: { status: 'error', message: 'Invalid email or password' }, status: :unauthorized
+      render json: { status: 'error', errors: 'Invalid email or password' }, status: :unauthorized
     end
   end
 
@@ -16,7 +16,7 @@ class Api::V1::AuthController < ApplicationController
     if user
       render json: { status: 'success', user: { email: user.email } }, status: :ok
     else
-      render json: { status: 'error', message: 'Unauthorized' }, status: :unauthorized
+      render json: { status: 'error', errors: 'Unauthorized' }, status: :unauthorized
     end
   end
 
