@@ -8,7 +8,7 @@ module Api
 
       # GET /api/v1/categories
       def index
-        @categories = Category.all
+        @categories = current_user.categories
         render_success(serialize(@categories))
       end
 
@@ -19,7 +19,7 @@ module Api
 
       # POST /api/v1/categories
       def create
-        @category = Category.new(category_params)
+        @category = current_user.categories.build(category_params)
         if @category.save
           render_success(serialize(@category), :created)
         else

@@ -8,7 +8,7 @@ module Api
 
       # GET /api/v1/products
       def index
-        @products = Product.all
+        @products = current_user.products
         render_success(serialize(@products))
       end
 
@@ -19,7 +19,7 @@ module Api
 
       # POST /api/v1/products
       def create
-        @product = Product.new(product_params)
+        @product = current_user.products.build(product_params)
         if @product.save
           render_success(serialize(@product), :created)
         else
