@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-97#11yv1)wo3l7q&#0+a$(rg7tv_nc7v^0wvgfd(@uz-4%($g1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["churu-gastos-api.onrender.com", "localhost:5173"]
 
 
 # Application definition
