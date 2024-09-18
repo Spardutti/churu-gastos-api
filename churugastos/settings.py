@@ -51,6 +51,9 @@ ROOT_URLCONF = 'churugastos.urls'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "https://churu-gastos-api.onrender.com",
+    "churu-gastos-api.onrender.com",
+    "https://churu-gastos.onrender.com/",
+    "churu-gastos.onrender.com/"
 ]
 
 CORS_ALLOW_CREDENTIALS = False
