@@ -3,24 +3,32 @@ version: "3.9"
 services:
     web:
         build: .
-        command: gunicorn churugastos.wsgi:application --workers 3 --bind 0.0.0.0:8000
+        command: sh -c "python manage.py makemigrations && python manage.py migrate && gunicorn churugastos.wsgi:application --workers 3 --bind 0.0.0.0:8000"
+        # command: gunicorn churugastos.wsgi:application --workers 3 --bind 0.0.0.0:8000
         ports:
-            - "8000:8000"
+            - "${PORT}:8000"
         volumes:
             - .:/app
         environment:
-            - DEBUG=1
+            - DEBUG=${DEBUG}
+            - DB_NAME=${DB_NAME}
+            - DB_USER=${DB_USER}
+            - DB_PASSWORD=${DB_PASSWORD}
+            - DB_HOST=${DB_HOST}
+            - DB_PORT=${DB_PORT}
         depends_on:
             - db
 
     db:
         image: postgres:15
         environment:
-            POSTGRES_DB: mydatabase
-            POSTGRES_USER: myuser
-            POSTGRES_PASSWORD: mypassword
+            POSTGRES_DB: ${DB_NAME}
+            POSTGRES_USER: ${DB_USER}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
         volumes:
             - postgres_data:/var/lib/postgresql/data
+        ports:
+            - "5432:5432"
 
 volumes:
     postgres_data:
