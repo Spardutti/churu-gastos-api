@@ -6,7 +6,7 @@ services:
         command: sh -c "python manage.py makemigrations && python manage.py migrate && gunicorn churugastos.wsgi:application --workers 3 --bind 0.0.0.0:8000"
         # command: gunicorn churugastos.wsgi:application --workers 3 --bind 0.0.0.0:8000
         ports:
-            - "8000:8000"
+            - "${PORT}:8000"
         volumes:
             - .:/app
         environment:
