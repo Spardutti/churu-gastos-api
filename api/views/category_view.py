@@ -22,7 +22,7 @@ class CategoryApiView(APIView):
         
         # List
         else:
-            categories = Category.objects.filter(user=request.user).values('id', 'name', 'budget')
+            categories = Category.objects.filter(user=request.user)
             serializer = CategorySerializer(categories, many=True)
         
             return Response({"categories": serializer.data}, status=status.HTTP_200_OK)
