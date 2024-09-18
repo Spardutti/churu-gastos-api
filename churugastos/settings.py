@@ -17,7 +17,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG") == "True"
 
-ALLOWED_HOSTS = ["localhost", "localhost:5173", "https://churu-gastos-api.onrender.com"]
+ALLOWED_HOSTS = ["localhost", "localhost:5173", "https://churu-gastos-api.onrender.com", "churu-gastos-api.onrender.com", "churu-gastos.onrender.com"]
 
 # Application definition
 
