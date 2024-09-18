@@ -1,1 +1,2 @@
-from .category_views import get_categories, create_category
+from .category_view import CategoryAPIView
+from .user_register_view import RegisterView

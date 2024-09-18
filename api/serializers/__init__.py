@@ -1,0 +1,2 @@
+from .normal_user_serializer import UserSerializer
+from .category_serializer import CategorySerializer
