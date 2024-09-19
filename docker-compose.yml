@@ -3,7 +3,7 @@ version: "3.9"
 services:
     web:
         build: .
-        command: sh -c "python manage.py makemigrations && python manage.py migrate && gunicorn churugastos.wsgi:application --workers 3 --bind 0.0.0.0:8000"
+        command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
         # command: gunicorn churugastos.wsgi:application --workers 3 --bind 0.0.0.0:8000
         ports:
             - "${PORT}:8000"

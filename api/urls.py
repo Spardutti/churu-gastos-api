@@ -8,6 +8,7 @@ from .views import RegisterView
 
 urlpatterns = [
     path('categories/', CategoryApiView.as_view(), name='Category'),
+    path('categories/<int:pk>/', CategoryApiView.as_view(), name='Category'),
     path('expenses/', ExpenseApiView.as_view(), name='Expense'),
     path('budget/', BudgetApiView.as_view(), name='Budget'),
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),

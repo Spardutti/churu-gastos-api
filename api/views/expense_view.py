@@ -2,6 +2,8 @@ from datetime import datetime, timedelta
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
+from api.utils import get_month_date_range
+
 from ..serializers import ExpenseSerializer
 from ..models import Expense
 from rest_framework import status
@@ -12,30 +14,34 @@ class ExpenseApiView(APIView):
     def get(self, request):
         year = request.query_params.get('year', None)
         month = request.query_params.get('month', None)
+        category_id = request.query_params.get('category_id', None)
 
         if year and month:
             try:
-                start_date = datetime(int(year), int(month), 1)
-                # Handle last day of the month
-                next_month = start_date.replace(day=28) + timedelta(days=4)
-                end_date = next_month - timedelta(days=next_month.day)
-                
-                expenses = Expense.objects.filter(
-                    user=request.user,
-                    date__range=[start_date, end_date]
-                )
+                start_date, end_date = get_month_date_range(year=year, month=month)
+
+                filter_args = {
+                'user': request.user,
+                'date__gte': start_date,
+                'date__lt': end_date
+                }
+
+                if category_id:
+                    filter_args['category_id'] = category_id
+                    
+                expenses = Expense.objects.filter(**filter_args)
             except ValueError:
-                    return Response({"error": "Invalid date format"}, status=status.HTTP_400_BAD_REQUEST)
+                    return Response({"error": "Invalid date format"}, status=status.HTTP_400_BAD_REQUEST) 
             
         else:
             expenses = Expense.objects.filter(user=request.user)
 
         serializer = ExpenseSerializer(expenses, many=True)
-        return Response({"expenses": serializer.data}, status=status.HTTP_200_OK)
+        return Response({"data": serializer.data}, status=status.HTTP_200_OK)
     
     def post(self, request):
         serializer = ExpenseSerializer(data=request.data) 
         if serializer.is_valid():
             expense = serializer.save(user=request.user)
-            return Response({"expense": ExpenseSerializer(expense).data}, status=status.HTTP_201_CREATED)
+            return Response({"data": ExpenseSerializer(expense).data}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
