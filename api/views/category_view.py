@@ -48,7 +48,7 @@ class CategoryApiView(APIView):
 
                 return Response(
                     {
-                        "category": category_serializer.data,
+                        "data": category_serializer.data,
                     }, 
                     status=status.HTTP_201_CREATED
                 )
