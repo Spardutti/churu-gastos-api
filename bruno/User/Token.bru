@@ -1,11 +1,11 @@
 meta {
-  name: Register
+  name: Token
   type: http
   seq: 2
 }
 
 post {
-  url: {{url}}/register/
+  url: {{url}}/token/
   body: json
   auth: none
 }
@@ -13,6 +13,6 @@ post {
 body:json {
   {
     "password": "123",
-    "email": "Chester@g.com"
+    "email": "123@g.com"
   }
 }

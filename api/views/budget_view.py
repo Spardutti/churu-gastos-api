@@ -1,3 +1,4 @@
+from multiprocessing import Value
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.db.models import Sum
@@ -11,29 +12,26 @@ from rest_framework.permissions import IsAuthenticated
 
 class BudgetApiView(APIView):
     permission_classes = [IsAuthenticated]
-    
     def get(self, request, pk=None):
         if pk is not None:
             try:
-                budget = self.get_budget_by_pk(pk)
+                budget = Budget.objects.get(pk=pk, user=request.user)
+                serializer = BudgetSerializer(budget)
+                return Response({"data": serializer.data}, status=status.HTTP_200_OK)
             except Budget.DoesNotExist:
                 return Response({"error": "Budget not found"}, status=status.HTTP_404_NOT_FOUND)
-            
-            serializer = BudgetSerializer(budget)
-            return Response({"data": serializer.data}, status=status.HTTP_200_OK)
             
         year = request.query_params.get('year', None)
         month = request.query_params.get('month', None)
         category_id = request.query_params.get('category_id', None)
 
         try:
-            budgets = self.get_filtered_budgets(request.user, year, month, category_id)
+            budget = self.get_filtered_budgets(request.user, year, month, category_id)
         except ValueError:
             return Response({"error": "Invalid date format"}, status=status.HTTP_400_BAD_REQUEST)
         
-        serializer = BudgetSerializer(budgets, many=True)
-        return Response({"data": serializer.data}, status=status.HTTP_200_OK)
-    
+        return Response({"data": { "monthly_budget" : budget }}, status=status.HTTP_200_OK)
+        
     def post(self, request):
         serializer = BudgetSerializer(data=request.data) 
         if serializer.is_valid():
@@ -56,6 +54,7 @@ class BudgetApiView(APIView):
     def filter_by_date_and_category(self, user, start_date, end_date, category_id=None):
         """
         Filter budgets by date and category if provided.
+        Returns the total amount for the filtered budgets.
         """
         filter_args = {
             'user': user,
@@ -63,10 +62,10 @@ class BudgetApiView(APIView):
             'date__lt': end_date
         }
 
-        if category_id:
+        if category_id is not None and category_id != "undefined":
             filter_args['category_id'] = category_id
 
-        return self.filter_by_user(user).filter(**filter_args)
+        return self.filter_by_user(user).filter(**filter_args).aggregate(Sum('amount'))['amount__sum'] or 0
     
     def get_filtered_budgets(self, user, year, month, category_id):
         """
