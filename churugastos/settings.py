@@ -54,7 +54,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://churu-gastos.onrender.com",
 ]
 
-CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_CREDENTIALS = False
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
