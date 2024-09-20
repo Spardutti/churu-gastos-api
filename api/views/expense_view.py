@@ -16,25 +16,10 @@ class ExpenseApiView(APIView):
         month = request.query_params.get('month', None)
         category_id = request.query_params.get('category_id', None)
 
-        if year and month:
-            try:
-                start_date, end_date = get_month_date_range(year=year, month=month)
-
-                filter_args = {
-                'user': request.user,
-                'date__gte': start_date,
-                'date__lt': end_date
-                }
-
-                if category_id:
-                    filter_args['category_id'] = category_id
-                    
-                expenses = Expense.objects.filter(**filter_args)
-            except ValueError:
-                    return Response({"error": "Invalid date format"}, status=status.HTTP_400_BAD_REQUEST) 
-            
-        else:
-            expenses = Expense.objects.filter(user=request.user)
+        try:
+            expenses = self.get_filtered_expenses(request.user, year, month, category_id)
+        except ValueError:
+            return Response({"error": "Invalid date format"}, status=status.HTTP_400_BAD_REQUEST)
 
         serializer = ExpenseSerializer(expenses, many=True)
         return Response({"data": serializer.data}, status=status.HTTP_200_OK)
@@ -45,3 +30,33 @@ class ExpenseApiView(APIView):
             expense = serializer.save(user=request.user)
             return Response({"data": ExpenseSerializer(expense).data}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def filter_by_user(self, user):
+        """
+        Returns all expenses for a user.
+        """
+        return Expense.objects.filter(user=user)
+    
+    def filter_by_date_and_category(self, user, start_date, end_date, category_id=None):
+        """
+        Filter expenses by date and category if provided.
+        """
+        filter_args = {
+            'user': user,
+            'date__gte': start_date,
+            'date__lt': end_date
+        }
+
+        if category_id:
+            filter_args['category_id'] = category_id
+
+        return Expense.objects.filter(**filter_args)
+    
+    def get_filtered_expenses(self, user, year, month, category_id):
+        """
+        Filter expenses by year, month, and category if provided.
+        """
+        if year and month:
+            start_date, end_date = get_month_date_range(year, month)
+            return self.filter_by_date_and_category(user, start_date, end_date, category_id)
+        return self.filter_by_user(user)
