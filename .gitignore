@@ -56,8 +56,6 @@ coverage.xml
 *.cover
 .hypothesis/
 
-# Migrations
-*/migrations/*
 
 # IDE-specific files
 .idea/
