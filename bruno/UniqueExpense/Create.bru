@@ -1,0 +1,18 @@
+meta {
+  name: Create
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{url}}/unique-expenses/
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Bandeja",
+    "amount": 2000
+  }
+}

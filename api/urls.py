@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CategoryApiView, ExpenseApiView, UserView
+from .views import CategoryApiView, ExpenseApiView, UserView, UniqueExpenseApiView
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -10,6 +10,7 @@ urlpatterns = [
     path('categories/', CategoryApiView.as_view(), name='Category'),
     path('categories/<int:pk>/', CategoryApiView.as_view(), name='Category'),
     path('expenses/', ExpenseApiView.as_view(), name='Expense'),
+    path('unique-expenses/', UniqueExpenseApiView.as_view(), name='UniqueExpense'),
     path('user/', UserView.as_view(), name='User'),
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),

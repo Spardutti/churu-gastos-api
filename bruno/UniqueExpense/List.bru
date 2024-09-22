@@ -1,0 +1,16 @@
+meta {
+  name: List
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{url}}/unique-expenses?year=2024&month=9
+  body: none
+  auth: inherit
+}
+
+query {
+  year: 2024
+  month: 9
+}
