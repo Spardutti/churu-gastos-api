@@ -63,4 +63,4 @@ class CategoryApiView(APIView):
         """
         Returns all categories for a user filtered by the month.
         """
-        return Category.objects.filter(user=user, month__gte=start_date, month__lt=end_date)
+        return Category.objects.filter(user=user, date__gte=start_date, date__lt=end_date)
