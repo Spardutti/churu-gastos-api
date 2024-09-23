@@ -15,6 +15,7 @@ class CardPayment(models.Model):
     payments_made = models.IntegerField(default=0)
     end_payment_date = models.DateTimeField(null=True, blank=True)
     next_payment_date = models.DateTimeField(null=True, blank=True)
+    card_id = models.ForeignKey('CreditCard', on_delete=models.CASCADE)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -24,8 +25,11 @@ class CardPayment(models.Model):
 
         self.end_payment_date = self.initial_payment_date + relativedelta(months=self.number_of_payments)
 
+        self.end_payment_date = set_timezone_aware_dates(field='end_payment_date', instance=CardPayment, user=self.user)
+
         if self.payments_made < self.number_of_payments:
             self.next_payment_date = self.initial_payment_date + relativedelta(months=self.payments_made)
+            self.next_payment_date = set_timezone_aware_dates(field='next_payment_date', instance=CardPayment, user=self.user)
 
         super(CardPayment, self).save(*args, **kwargs)
 
