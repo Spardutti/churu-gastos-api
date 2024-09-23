@@ -17,6 +17,6 @@ class UniqueExpense(models.Model):
         return self.name
     
     def save(self, *args, **kwargs):
-        set_timezone_aware_dates(self, self.user)
+        set_timezone_aware_dates(self, self.user, 'date')
 
         super(UniqueExpense, self).save(*args, **kwargs)

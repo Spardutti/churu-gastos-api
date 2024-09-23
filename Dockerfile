@@ -13,5 +13,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Make port 8000 available to the world outside this container
 EXPOSE $PORT
 
-# Start gunicorn and run migrations
-CMD ["sh", "-c", "python manage.py migrate && gunicorn churugastos.wsgi --workers=3 --bind=0.0.0.0:8000"]
+# Start gunicorn
+CMD ["gunicorn", "churugastos.wsgi", "--workers=3", "--bind=0.0.0.0:8000"]

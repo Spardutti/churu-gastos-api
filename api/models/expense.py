@@ -14,6 +14,6 @@ class Expense(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     def save(self, *args, **kwargs):
-        set_timezone_aware_dates(self, self.user)
+        set_timezone_aware_dates(self, self.user, 'date')
 
         super(Expense, self).save(*args, **kwargs)

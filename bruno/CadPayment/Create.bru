@@ -1,0 +1,20 @@
+meta {
+  name: Create
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{url}}/card-payments/
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "description": "PC",
+    "total_amount": 200000,
+    "initial_payment_date": "2024-10-05T00:00:00",
+    "number_of_payments": 12
+  }
+}
