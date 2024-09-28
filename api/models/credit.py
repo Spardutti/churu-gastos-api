@@ -14,6 +14,7 @@ class Credit(models.Model):
     payments_made = models.IntegerField(default=0)
     next_payment_date = models.DateTimeField()
     is_active = models.BooleanField(default=True)
+    is_payment_complete = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -23,7 +24,6 @@ class Credit(models.Model):
     def save(self, *args, **kwargs):
         set_timezone_aware_dates(self, self.user, 'next_payment_date')
 
-        # Check if this is a new instance (being created)
         if not self.pk:
             user_now = timezone.now().astimezone(timezone.get_current_timezone())
             

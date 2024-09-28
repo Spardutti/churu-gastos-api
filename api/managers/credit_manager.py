@@ -24,11 +24,11 @@ class CreditManager(models.Manager):
                 credit.save(update_fields=['is_active', 'payments_made', 'next_payment_date'])
 
 
-        # 2. Update is_active to False for credits where payments_made is equal to the number_of_payments
+        # 2. Update is_active to False for credits where payments_made is equal to the number_of_payments and next_payment_date is before the current date/time
         base_queryset.filter(
             payments_made=F('number_of_payments'),
-            next_payment_date__lt=now  # Checks if the next_payment_date is before the current date/time
-        ).update(is_active=False)
+            next_payment_date__lt=now
+        ).update(is_active=False, is_payment_complete=True)
 
         # Return the base queryset with additional annotations if needed
         return base_queryset.annotate(
