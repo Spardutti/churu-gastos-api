@@ -2,5 +2,5 @@ from .normal_user_serializer import UserSerializer
 from .category_serializer import CategorySerializer
 from .expense_serializer import ExpenseSerializer
 from .unique_expense_serializer import UniqueExpenseSerializer
-from .card_payment_serializer import CardPaymentSerializer
-from .credit_card_serializer import CreditCardSerializer
+from .credit_serializer import CreditSerializer
+ 
