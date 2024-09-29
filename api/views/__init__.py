@@ -3,3 +3,4 @@ from .user_view import UserView
 from .expense_view import ExpenseApiView
 from .unique_expense_view import UniqueExpenseApiView
 from .credit_view import CreditApiView
+from .new_month import NewMonthApiView

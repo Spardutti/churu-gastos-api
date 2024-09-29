@@ -1,3 +1,4 @@
+from datetime import date
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -29,12 +30,18 @@ class CategoryApiView(APIView):
             return Response({"error": "Year and month must be provided"}, status=status.HTTP_400_BAD_REQUEST)
 
         categories = self.filter_categories(request.user, year=int(year), month=int(month))
+        
+        # Check if categories exist for any month in the past
+        past_categories_exist = self.past_categories_exist(request, year=int(year), month=int(month))
+
+        # is_new_month is True only if past categories exist but no categories for the given month and year
+        is_new_month = past_categories_exist and not categories.exists()
 
         # Calculate the total budget for the filtered categories
         total_budget = categories.aggregate(total=Sum('budget'))['total'] or 0
 
         serializer = CategorySerializer(categories, many=True)
-        return Response({"data": serializer.data, "monthly_budget": total_budget}, status=status.HTTP_200_OK)
+        return Response({"data": serializer.data, "monthly_budget": total_budget, "is_new_month": is_new_month}, status=status.HTTP_200_OK)
 
     def post(self, request):
         category_serializer = CategorySerializer(data=request.data)
@@ -64,3 +71,11 @@ class CategoryApiView(APIView):
         Returns all categories for a user filtered by the month.
         """
         return Category.objects.filter(user=user, date__gte=start_date, date__lt=end_date)
+    
+    def past_categories_exist(self, request, year, month):
+        start_date, end_date = get_month_date_range(year=year, month=month)
+        return Category.objects.filter(
+            user=request.user
+        ).exclude(
+            date=start_date
+        ).exists()
