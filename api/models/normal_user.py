@@ -1,6 +1,5 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
-import pytz
 
 class NormalUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -26,7 +25,8 @@ class NormalUser(AbstractBaseUser):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    timezone = models.CharField(max_length=63, null=False) 
+    timezone = models.CharField(max_length=63, null=False)
+    language = models.CharField(default='en', null=False)
 
 
     objects = NormalUserManager()
