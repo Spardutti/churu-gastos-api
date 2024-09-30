@@ -9,6 +9,8 @@ class Expense(models.Model):
     description = models.TextField(blank=True, null=True, max_length=100)
     category_id = models.ForeignKey('Category', on_delete=models.CASCADE)
     user = models.ForeignKey('NormalUser', on_delete=models.CASCADE)
+
+    is_recursive = models.BooleanField(default=False)
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
