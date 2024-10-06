@@ -1,0 +1,17 @@
+meta {
+  name: Delete
+  type: http
+  seq: 3
+}
+
+delete {
+  url: {{url}}/accounts/4
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "description": "Cuenta mercado pago MP"
+  }
+}

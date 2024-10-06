@@ -37,6 +37,17 @@ class CreditApiView(APIView):
         except Credit.DoesNotExist:
             return Response({"error": "Card Payment not found"}, status=status.HTTP_404_NOT_FOUND)
         
+    def patch(self, request, pk=None):
+        try:
+            credit = Credit.objects.get(pk=pk, user=request.user)
+            serializer = CreditSerializer(credit, data=request.data, partial=True)
+            if serializer.is_valid():
+                credit = serializer.save()
+                return Response({"data": CreditSerializer(credit).data}, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Credit.DoesNotExist:
+            return Response({"error": "Card Payment not found"}, status=status.HTTP_404_NOT_FOUND)
+        
     def calculate_current_month_total(self, request):
         now = datetime.now()
         month_start, month_end = get_month_date_range(month=now.month, year=now.year)

@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CategoryApiView, ExpenseApiView, UserView, UniqueExpenseApiView, CreditApiView, NewMonthApiView
+from .views import CategoryApiView, ExpenseApiView, UserView, UniqueExpenseApiView, CreditApiView, NewMonthApiView, AccountAPIView, AccountBalanceAPIView
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -11,9 +11,15 @@ urlpatterns = [
     path('categories/<int:pk>/', CategoryApiView.as_view(), name='Category'),
     path('new-month/', NewMonthApiView.as_view(), name='NewMonth'),
     path('expenses/', ExpenseApiView.as_view(), name='Expense'),
+    path('expenses/<int:pk>/', ExpenseApiView.as_view(), name='Expense'),
     path('unique-expenses/', UniqueExpenseApiView.as_view(), name='UniqueExpense'),
+    path('unique-expenses/<int:pk>/', UniqueExpenseApiView.as_view(), name='UniqueExpense'),
     path('credits/', CreditApiView.as_view(), name='CardPayment'),
     path('credits/<int:pk>/', CreditApiView.as_view(), name='CardPayment'),
+    path('accounts/', AccountAPIView.as_view(), name='Account'),
+    path('accounts/<int:pk>', AccountAPIView.as_view(), name='Account'),
+    path('account-balances/', AccountBalanceAPIView.as_view(), name='AccountBalance'),
+    path('account-balances/<int:pk>', AccountBalanceAPIView.as_view(), name='AccountBalance'),
     path('user/', UserView.as_view(), name='User'),
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
