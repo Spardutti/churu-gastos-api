@@ -5,14 +5,14 @@ meta {
 }
 
 patch {
-  url: {{url}}/account-balances/2
+  url: {{url}}/account-budget/2
   body: json
   auth: inherit
 }
 
 body:json {
   {
-    "balance": 500000,
+    "budget": 500000,
     "account": 2
   }
 }

@@ -2,7 +2,7 @@ from rest_framework import serializers
 from ..models import AccountBudget, Account
 from .account_serializer import AccountSerializer   
 
-class AccountBalanceSerializer(serializers.ModelSerializer):
+class AccountBudgetSerializer(serializers.ModelSerializer):
     account = AccountSerializer(read_only=True)
     
     account_id = serializers.PrimaryKeyRelatedField(

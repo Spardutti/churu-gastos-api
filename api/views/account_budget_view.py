@@ -9,7 +9,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from django.db.models import Sum
 
-class AccountBalanceAPIView(APIView):
+class AccountBudgetAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -34,8 +34,8 @@ class AccountBalanceAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def patch(self, request, pk=None):
-        account_balance = AccountBudget.objects.get(pk=pk, user=request.user)
-        serializer = AccountBudgetSerializer(account_balance, data=request.data, partial=True)
+        account_budget = AccountBudget.objects.get(pk=pk, user=request.user)
+        serializer = AccountBudgetSerializer(account_budget, data=request.data, partial=True)
         if(serializer.is_valid()):
             serializer.save()
             return Response({"data": serializer.data}, status=status.HTTP_200_OK)
@@ -43,11 +43,11 @@ class AccountBalanceAPIView(APIView):
     
     def delete(self, request, pk=None):
         try:
-            account_balance = AccountBudget.objects.get(pk=pk, user=request.user)
-            account_balance.delete()
-            return Response({"message": "Account Balance deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+            account_budget = AccountBudget.objects.get(pk=pk, user=request.user)
+            account_budget.delete()
+            return Response({"message": "Account Budget deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
         except AccountBudget.DoesNotExist:
-            return Response({"error": "Account Balance not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "Account Budget not found"}, status=status.HTTP_404_NOT_FOUND)
 
     def filter_by_months(self, year, month, user):
         start_date, end_date = get_month_date_range(year, month)

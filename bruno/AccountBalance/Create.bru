@@ -5,14 +5,14 @@ meta {
 }
 
 post {
-  url: {{url}}/account-balances/
+  url: {{url}}/account-budget/
   body: json
   auth: inherit
 }
 
 body:json {
   {
-    "balance": 200000,
+    "budget": 200000,
     "account_id": 2
   }
 }

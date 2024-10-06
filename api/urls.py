@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CategoryApiView, ExpenseApiView, UserView, UniqueExpenseApiView, CreditApiView, NewMonthApiView, AccountAPIView, AccountBalanceAPIView
+from .views import CategoryApiView, ExpenseApiView, UserView, UniqueExpenseApiView, CreditApiView, NewMonthApiView, AccountAPIView, AccountBudgetAPIView, CurrentMonthAccountBudgetAPIView
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -18,8 +18,9 @@ urlpatterns = [
     path('credits/<int:pk>/', CreditApiView.as_view(), name='CardPayment'),
     path('accounts/', AccountAPIView.as_view(), name='Account'),
     path('accounts/<int:pk>', AccountAPIView.as_view(), name='Account'),
-    path('account-balances/', AccountBalanceAPIView.as_view(), name='AccountBalance'),
-    path('account-balances/<int:pk>', AccountBalanceAPIView.as_view(), name='AccountBalance'),
+    path('account-budget/', AccountBudgetAPIView.as_view(), name='AccountBalance'),
+    path('account-budget/<int:pk>', AccountBudgetAPIView.as_view(), name='AccountBalance'),
+    path('monthly-account-budget', CurrentMonthAccountBudgetAPIView.as_view(), name='MonthlyAccountBalance'),
     path('user/', UserView.as_view(), name='User'),
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),

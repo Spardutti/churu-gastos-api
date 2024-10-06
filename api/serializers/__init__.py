@@ -4,5 +4,5 @@ from .expense_serializer import ExpenseSerializer
 from .unique_expense_serializer import UniqueExpenseSerializer
 from .credit_serializer import CreditSerializer
 from .account_serializer import AccountSerializer
-from .account_balance_serializer import AccountBalanceSerializer
+from .account_budget_serializer import AccountBudgetSerializer
  
