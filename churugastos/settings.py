@@ -52,6 +52,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "https://churu-gastos-api.onrender.com",
     "https://churu-gastos.onrender.com",
+    "http://localhost:4173"
 ]
 
 CORS_ALLOW_CREDENTIALS = False

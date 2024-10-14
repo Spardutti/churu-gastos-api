@@ -1,23 +1,11 @@
 meta {
   name: Create
   type: http
-  seq: 1
+  seq: 2
 }
 
 post {
   url: {{url}}/credits/
-  body: json
+  body: none
   auth: inherit
-}
-
-body:json {
-  {
-    "description": "PC",
-    "total_amount": 200000,
-    "initial_payment_date": "2024-10-05T00:00:00",
-    "number_of_payments": 12,
-    
-    //"payments_made": 3,
-    "next_payment_date": "2024-11-05T00:00:00"
-  }
 }

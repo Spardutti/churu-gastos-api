@@ -1,0 +1,18 @@
+meta {
+  name: Patch
+  type: http
+  seq: 3
+}
+
+patch {
+  url: {{url}}/unique-expenses/59/
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Bandeja",
+    "amount": 2000
+  }
+}

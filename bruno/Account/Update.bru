@@ -1,0 +1,17 @@
+meta {
+  name: Update
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{url}}/accounts/4
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "description": "Cuenta mercado pago MP"
+  }
+}

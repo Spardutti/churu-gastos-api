@@ -31,6 +31,25 @@ class ExpenseApiView(APIView):
             return Response({"data": ExpenseSerializer(expense).data}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+    def delete(self, request, pk=None):
+        try:
+            expense = Expense.objects.get(pk=pk, user=request.user)
+            expense.delete()
+            return Response({"message": "Expense deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+        except Expense.DoesNotExist:
+            return Response({"error": "Expense not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+    def patch(self, request, pk=None):
+        try:
+            expense = Expense.objects.get(pk=pk, user=request.user)
+            serializer = ExpenseSerializer(expense, data=request.data, partial=True)
+            if serializer.is_valid():
+                expense = serializer.save()
+                return Response({"data": ExpenseSerializer(expense).data}, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Expense.DoesNotExist:
+            return Response({"error": "Expense not found"}, status=status.HTTP_404_NOT_FOUND)
+    
     def filter_by_user(self, user):
         """
         Returns all expenses for a user.

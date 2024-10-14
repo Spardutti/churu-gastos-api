@@ -51,6 +51,17 @@ class CategoryApiView(APIView):
         
         return Response(category_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+    def patch(self, request, pk=None):
+        try:
+            category = Category.objects.get(pk=pk, user=request.user)
+            category_serializer = CategorySerializer(category, data=request.data, partial=True)
+            if category_serializer.is_valid():
+                category_serializer.save()
+                return Response({"data": category_serializer.data}, status=status.HTTP_200_OK)
+            return Response(category_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Category.DoesNotExist:
+            return Response({"error": "Category not found"}, status=status.HTTP_404_NOT_FOUND)
+    
     def delete(self, request, pk):
         try:
             category = Category.objects.get(pk=pk, user=request.user)
@@ -63,14 +74,13 @@ class CategoryApiView(APIView):
         """
         Filter categories by date range.
         """
-        start_date, end_date = get_month_date_range(year=year, month=month)
-        return self.categories_by_month(user, start_date, end_date)
+        start_date, end_date = get_month_date_range(year, month)
+        return Category.objects.filter(
+            user=user,
+            date__gte=start_date,
+            date__lte=end_date
+        ).order_by('date')
 
-    def categories_by_month(self, user, start_date, end_date):
-        """
-        Returns all categories for a user filtered by the month.
-        """
-        return Category.objects.filter(user=user, date__gte=start_date, date__lt=end_date)
     
     def past_categories_exist(self, request, year, month):
         start_date, end_date = get_month_date_range(year=year, month=month)

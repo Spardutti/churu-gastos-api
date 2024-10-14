@@ -1,0 +1,18 @@
+meta {
+  name: Create
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{url}}/account-budget/
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "budget": 200000,
+    "account_id": 2
+  }
+}
