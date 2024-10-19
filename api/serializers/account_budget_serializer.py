@@ -11,4 +11,5 @@ class AccountBudgetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AccountBudget
-        fields = ('id', 'account', 'account_id', 'date', 'amount')
+        fields = ('id', 'account', 'account_id', 'date', 'budget')
+

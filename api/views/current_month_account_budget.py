@@ -24,7 +24,7 @@ class CurrentMonthAccountBudgetAPIView(APIView):
     def total_accounts_budget(self, account_budgets):
         total = 0
         for budget in account_budgets:
-            total += budget.amount
+            total += budget.budget
         return total
     
     def total_expenses(self, expenses):
