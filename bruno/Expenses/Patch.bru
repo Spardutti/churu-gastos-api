@@ -5,7 +5,13 @@ meta {
 }
 
 patch {
-  url: {{url}}/expenses
-  body: none
+  url: {{url}}/expenses/2/
+  body: json
   auth: inherit
+}
+
+body:json {
+  {
+  "description": "Chester"
+  }
 }

@@ -8,6 +8,7 @@ class UniqueExpense(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     date = date = models.DateTimeField(default=timezone.now)
     user = models.ForeignKey('NormalUser', on_delete=models.CASCADE)
+    account_budget = models.ForeignKey('AccountBudget', on_delete=models.CASCADE)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

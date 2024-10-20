@@ -5,7 +5,12 @@ meta {
 }
 
 get {
-  url: {{url}}/monthly-account-budget
+  url: {{url}}/monthly-account-budget?year=2024&month=10
   body: none
-  auth: none
+  auth: inherit
+}
+
+query {
+  year: 2024
+  month: 10
 }
