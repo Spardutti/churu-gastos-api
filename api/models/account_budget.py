@@ -16,15 +16,4 @@ class AccountBudget(models.Model):
         # Make date timezone aware if necessary
         set_timezone_aware_dates(self, self.user, 'date')
 
-        
-
         super(AccountBudget, self).save(*args, **kwargs)
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=['account'],
-                name='unique_account_budget_per_month',
-                condition=models.Q(date__year=ExtractYear('date'), date__month=ExtractMonth('date'))
-            )
-        ]

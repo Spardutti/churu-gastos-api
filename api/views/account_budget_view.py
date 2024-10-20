@@ -18,7 +18,7 @@ class AccountBudgetAPIView(APIView):
             year = request.query_params.get('year')
             month = request.query_params.get('month')
 
-            if account_id is not None:
+            if account_id is not None and year and month:
                 # Filter by account_id instead of pk
                 start_date, end_date = get_month_date_range(year, month)
                 try:
@@ -32,7 +32,7 @@ class AccountBudgetAPIView(APIView):
 
             
             
-            if year is None or month is None:
+            elif year is None or month is None:
                 return Response({"error": "Year and month must be provided"}, status=status.HTTP_400_BAD_REQUEST)
 
             accounts = self.filter_by_months(year, month, request.user)
@@ -57,6 +57,7 @@ class AccountBudgetAPIView(APIView):
             date__year=year,
             date__month=month
         )
+        print('existing', existing_budget)
 
         if existing_budget.exists():
             # Return error response to frontend
