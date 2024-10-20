@@ -7,7 +7,7 @@ def assign_default_account_budget(apps, schema_editor):
     Expense = apps.get_model('api', 'Expense')
     UniqueExpense = apps.get_model('api', 'UniqueExpense')
 
-    # Get the first account budget or create a default one if none exists
+    # Get or create the first account budget
     account_budget = AccountBudget.objects.first()
 
     if not account_budget:
@@ -30,17 +30,28 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        # Step 1: Add the field with null=True
         migrations.AddField(
             model_name='expense',
             name='account_budget',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='api.AccountBudget'),
-            preserve_default=False,
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='api.AccountBudget'),
         ),
         migrations.AddField(
             model_name='uniqueexpense',
             name='account_budget',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='api.AccountBudget'),
-            preserve_default=False,
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='api.AccountBudget'),
         ),
+        # Step 2: Run Python function to assign default account budgets
         migrations.RunPython(assign_default_account_budget),
+        # Step 3: Alter the field to make it non-nullable
+        migrations.AlterField(
+            model_name='expense',
+            name='account_budget',
+            field=models.ForeignKey(null=False, on_delete=django.db.models.deletion.CASCADE, to='api.AccountBudget'),
+        ),
+        migrations.AlterField(
+            model_name='uniqueexpense',
+            name='account_budget',
+            field=models.ForeignKey(null=False, on_delete=django.db.models.deletion.CASCADE, to='api.AccountBudget'),
+        ),
     ]
