@@ -7,8 +7,7 @@ from hmac import new
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from api.models.expense import Expense
-from ..models import Category
+from ..models import Category, Expense, AccountBudget
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
@@ -32,11 +31,17 @@ class NewMonthApiView(APIView):
 
         categories = Category.objects.filter(user=request.user, date__gte=start_date_of_previous_month, date__lt=last_day_of_previous_month)
         expenses = Expense.objects.filter(user=request.user, date__gte=start_date_of_previous_month, date__lt=last_day_of_previous_month, is_recursive=True)
+        account_budgets = AccountBudget.objects.filter(user=request.user, date__gte=start_date_of_previous_month, date__lt=last_day_of_previous_month)
+
         try:
             # Create categories and map old IDs to new ones
             old_to_new_category_mapping = self.create_categories_for_new_month(categories, parsed_date)
+
+            # Create new account budgets and get old-to-new budget mapping
+            old_to_new_account_budget_mapping = self.create_account_budgets_for_new_month(account_budgets, parsed_date)
+           
             # Create recursive expenses using the new category IDs
-            self.create_recursive_expenses(expenses, old_to_new_category_mapping, parsed_date)
+            self.create_recursive_expenses(expenses, old_to_new_account_budget_mapping, old_to_new_category_mapping, parsed_date)
             return Response({"message": "Categories and expenses created successfully"}, status=status.HTTP_201_CREATED)
         except ValueError as e:
             print(f"Error: {e}")
@@ -50,6 +55,21 @@ class NewMonthApiView(APIView):
         start_date_of_previous_month = last_day_of_previous_month.replace(day=1)
         return start_date_of_previous_month, last_day_of_previous_month
     
+    def create_account_budgets_for_new_month(self, accounts, parsed_date):
+        old_to_new_account_budget_mapping = {}
+        for account in accounts:
+            # Create new account budget for the new month
+            new_budget = AccountBudget.objects.create(
+                account=account.account,
+                budget=account.budget,
+                user=account.user,
+                date=parsed_date
+            )
+            # Map old account budget ID to new account budget instance
+            old_to_new_account_budget_mapping[account.id] = new_budget
+        return old_to_new_account_budget_mapping
+
+    
     def create_categories_for_new_month(self, categories, parsed_date):
         old_to_new_category_mapping = {}
         for category in categories:
@@ -57,10 +77,13 @@ class NewMonthApiView(APIView):
             old_to_new_category_mapping[category.id] = new_category
         return old_to_new_category_mapping
 
-    def create_recursive_expenses(self, expenses, old_to_new_category_mapping, parsed_date):
+    def create_recursive_expenses(self, expenses, old_to_new_account_budget_mapping, old_to_new_category_mapping, parsed_date):
         for expense in expenses:
             new_category = old_to_new_category_mapping.get(expense.category_id.id)
-            if new_category is None:
+            new_account_budget = old_to_new_account_budget_mapping.get(expense.account_budget.id)
+
+
+            if new_category is None or new_account_budget is None:
                 continue   
             Expense.objects.create(
                 amount=expense.amount,
@@ -68,5 +91,6 @@ class NewMonthApiView(APIView):
                 description=expense.description,
                 is_recursive=expense.is_recursive,
                 user=expense.user,
-                date=parsed_date
+                date=parsed_date,
+                account_budget=new_account_budget
             )

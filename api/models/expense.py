@@ -15,6 +15,9 @@ class Expense(models.Model):
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self): 
+        return f"Expense(amount={self.amount}, date={self.date}, description={self.description}, category_id={self.category_id.id}, user={self.user.id}, account_budget={self.account_budget.id})"
     
     def save(self, *args, **kwargs):
         set_timezone_aware_dates(self, self.user, 'date')
